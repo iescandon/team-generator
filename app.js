@@ -147,15 +147,24 @@ function promptManager() {
 }
 
 function renderHTML() {
-    const htmlBlock = render(employeeArray);
+    const returnedHTML = render(employeeArray);
 
-    fs.writeFile(outputPath, htmlBlock, function (err) {
-        if (err) {
-            return console.log(err);
-        }
-
-        console.log("Success!");
-    });
+    if (fs.existsSync(OUTPUT_DIR)) {
+        fs.writeFile(outputPath, returnedHTML, function (err) {
+            if (err) {
+                return console.log(err);
+            }
+            console.log("File 'team.html' successfully written.");
+        });
+    } else {
+        console.log("Directory 'output' not found.");
+        console.log("Creating output folder directory...");
+        const outputDirPath = __dirname + "/output";
+        fs.mkdir(outputDirPath, { recursive: false }, (err) => {
+            if (err) throw err;
+        });
+        renderHTML();
+    }
 }
 
 promptUser();
