@@ -4,7 +4,6 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
-// const util = require("util");
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
@@ -12,7 +11,7 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
 const Employee = require("./lib/Employee");
 let employee = {};
-// const employeeArray = [];
+const employeeArray = [];
 
 function promptUser() {
     inquirer
@@ -41,7 +40,6 @@ function promptUser() {
         ])
         .then(function (response) {
             employee = response;
-            // console.log(employee);
             if (response.role === "Intern") {
                 promptIntern();
             } else if (response.role === "Engineer") {
@@ -60,10 +58,27 @@ function promptIntern() {
                 name: "name",
                 message: "What school are you currently attending?",
             },
+            {
+                type: "list",
+                name: "continue",
+                message: "Would you like to add any more members to your team?",
+                choices: ["Yes", "No"],
+            },
         ])
         .then(function (response) {
             employee.school = response.name;
-            console.log(employee);
+            const intern = new Intern(
+                employee.name,
+                employee.id,
+                employee.email,
+                employee.school
+            );
+            employeeArray.push(intern);
+            if (response.continue === "Yes") {
+                promptUser();
+            } else {
+                renderHTML();
+            }
         });
 }
 
@@ -75,10 +90,27 @@ function promptEngineer() {
                 name: "name",
                 message: "What is your GitHub username?",
             },
+            {
+                type: "list",
+                name: "continue",
+                message: "Would you like to add any more members to your team?",
+                choices: ["Yes", "No"],
+            },
         ])
         .then(function (response) {
             employee.github = response.name;
-            console.log(employee);
+            const engineer = new Engineer(
+                employee.name,
+                employee.id,
+                employee.email,
+                employee.github
+            );
+            employeeArray.push(engineer);
+            if (response.continue === "Yes") {
+                promptUser();
+            } else {
+                renderHTML();
+            }
         });
 }
 
@@ -90,11 +122,40 @@ function promptManager() {
                 name: "name",
                 message: "What is your office number?",
             },
+            {
+                type: "list",
+                name: "continue",
+                message: "Would you like to add any more members to your team?",
+                choices: ["Yes", "No"],
+            },
         ])
         .then(function (response) {
             employee.officeNumber = response.name;
-            console.log(employee);
+            const manager = new Manager(
+                employee.name,
+                employee.id,
+                employee.email,
+                employee.officeNumber
+            );
+            employeeArray.push(manager);
+            if (response.continue === "Yes") {
+                promptUser();
+            } else {
+                renderHTML();
+            }
         });
+}
+
+function renderHTML() {
+    const htmlBlock = render(employeeArray);
+
+    fs.writeFile(outputPath, htmlBlock, function (err) {
+        if (err) {
+            return console.log(err);
+        }
+
+        console.log("Success!");
+    });
 }
 
 promptUser();
