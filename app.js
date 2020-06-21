@@ -4,12 +4,100 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
+// const util = require("util");
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const Employee = require("./lib/Employee");
+let employee = {};
+// const employeeArray = [];
 
+function promptUser() {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                name: "name",
+                message: "What is your name?",
+            },
+            {
+                type: "input",
+                name: "id",
+                message: "What is your ID number?",
+            },
+            {
+                type: "input",
+                name: "email",
+                message: "What is your email?",
+            },
+            {
+                type: "list",
+                name: "role",
+                message: "What is your role?",
+                choices: ["Intern", "Engineer", "Manager"],
+            },
+        ])
+        .then(function (response) {
+            employee = response;
+            // console.log(employee);
+            if (response.role === "Intern") {
+                promptIntern();
+            } else if (response.role === "Engineer") {
+                promptEngineer();
+            } else {
+                promptManager();
+            }
+        });
+}
+
+function promptIntern() {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                name: "name",
+                message: "What school are you currently attending?",
+            },
+        ])
+        .then(function (response) {
+            employee.school = response.name;
+            console.log(employee);
+        });
+}
+
+function promptEngineer() {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                name: "name",
+                message: "What is your GitHub username?",
+            },
+        ])
+        .then(function (response) {
+            employee.github = response.name;
+            console.log(employee);
+        });
+}
+
+function promptManager() {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                name: "name",
+                message: "What is your office number?",
+            },
+        ])
+        .then(function (response) {
+            employee.officeNumber = response.name;
+            console.log(employee);
+        });
+}
+
+promptUser();
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
