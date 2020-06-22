@@ -14,7 +14,7 @@ let employee = {};
 const employeeArray = [];
 let counter = 0;
 
-function promptInit() {
+function promptManager() {
     console.log("Hello! Welcome to the Team Website Generator!");
     inquirer
         .prompt([
@@ -57,11 +57,11 @@ function promptInit() {
                 employee.officeNumber
             );
             employeeArray.push(manager);
-            promptUser();
+            promptEmployee();
         });
 }
 
-function promptUser() {
+function promptEmployee() {
     inquirer
         .prompt([
             {
@@ -129,7 +129,7 @@ function promptIntern() {
                         `Entry complete! ${counter} more entries left to go.`
                     );
                 }
-                promptUser();
+                promptEmployee();
             }
         });
 }
@@ -166,58 +166,10 @@ function promptEngineer() {
                         `Entry complete! ${counter} more entries left to go.`
                     );
                 }
-                promptUser();
+                promptEmployee();
             }
         });
 }
-
-// function promptManager() {
-//     inquirer
-//         .prompt([
-//             {
-//                 type: "input",
-//                 name: "number",
-//                 message: "What is their office number?",
-//             },
-// {
-//     type: "list",
-//     name: "continue",
-//     message: "Would you like to add any more members to your team?",
-//     choices: ["Yes", "No"],
-// },
-// ])
-// .then(function (response) {
-//     employee.officeNumber = response.number;
-//     const manager = new Manager(
-//         employee.name,
-//         employee.id,
-//         employee.email,
-//         employee.officeNumber
-//     );
-//     employeeArray.push(manager);
-//     counter--;
-//     if (counter === 0) {
-//         console.log(`All entries complete!`);
-//         renderHTML();
-//     } else {
-//         if (counter === 1) {
-//             console.log(
-//                 `Entry complete! ${counter} more entry left to go.`
-//             );
-//         } else {
-//             console.log(
-//                 `Entry complete! ${counter} more entries left to go.`
-//             );
-//         }
-//         promptUser();
-//     }
-// if (response.continue === "Yes") {
-//     promptUser();
-// } else {
-//     renderHTML();
-// }
-//         });
-// }
 
 function renderHTML() {
     const returnedHTML = render(employeeArray);
@@ -242,4 +194,4 @@ function renderHTML() {
     }
 }
 
-promptInit();
+promptManager();
