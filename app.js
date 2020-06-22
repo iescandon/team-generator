@@ -12,6 +12,23 @@ const render = require("./lib/htmlRenderer");
 const Employee = require("./lib/Employee");
 let employee = {};
 const employeeArray = [];
+let counter = 0;
+
+function promptNumber() {
+    console.log("Hello! Welcome to the team generator app!");
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                name: "counter",
+                message: "How many members are on your team?",
+            },
+        ])
+        .then(function (response) {
+            counter = response.counter;
+            promptUser();
+        });
+}
 
 function promptUser() {
     inquirer
@@ -19,22 +36,23 @@ function promptUser() {
             {
                 type: "input",
                 name: "name",
-                message: "What is your name?",
+                message:
+                    "Type in the name of the team member you would like to enter into the generator:",
             },
             {
                 type: "input",
                 name: "id",
-                message: "What is your ID number?",
+                message: "What is their ID number?",
             },
             {
                 type: "input",
                 name: "email",
-                message: "What is your email?",
+                message: "What is their email?",
             },
             {
                 type: "list",
                 name: "role",
-                message: "What is your role?",
+                message: "What is their role?",
                 choices: ["Intern", "Engineer", "Manager"],
             },
         ])
@@ -56,13 +74,7 @@ function promptIntern() {
             {
                 type: "input",
                 name: "name",
-                message: "What school are you currently attending?",
-            },
-            {
-                type: "list",
-                name: "continue",
-                message: "Would you like to add any more members to your team?",
-                choices: ["Yes", "No"],
+                message: "What school are they currently attending?",
             },
         ])
         .then(function (response) {
@@ -74,10 +86,21 @@ function promptIntern() {
                 employee.school
             );
             employeeArray.push(intern);
-            if (response.continue === "Yes") {
-                promptUser();
-            } else {
+            counter--;
+            if (counter === 0) {
+                console.log(`All entries complete!`);
                 renderHTML();
+            } else {
+                if (counter === 1) {
+                    console.log(
+                        `Entry complete! ${counter} more entry left to go.`
+                    );
+                } else {
+                    console.log(
+                        `Entry complete! ${counter} more entries left to go.`
+                    );
+                }
+                promptUser();
             }
         });
 }
@@ -88,13 +111,7 @@ function promptEngineer() {
             {
                 type: "input",
                 name: "name",
-                message: "What is your GitHub username?",
-            },
-            {
-                type: "list",
-                name: "continue",
-                message: "Would you like to add any more members to your team?",
-                choices: ["Yes", "No"],
+                message: "What is their GitHub username?",
             },
         ])
         .then(function (response) {
@@ -106,10 +123,21 @@ function promptEngineer() {
                 employee.github
             );
             employeeArray.push(engineer);
-            if (response.continue === "Yes") {
-                promptUser();
-            } else {
+            counter--;
+            if (counter === 0) {
+                console.log(`All entries complete!`);
                 renderHTML();
+            } else {
+                if (counter === 1) {
+                    console.log(
+                        `Entry complete! ${counter} more entry left to go.`
+                    );
+                } else {
+                    console.log(
+                        `Entry complete! ${counter} more entries left to go.`
+                    );
+                }
+                promptUser();
             }
         });
 }
@@ -120,14 +148,14 @@ function promptManager() {
             {
                 type: "input",
                 name: "name",
-                message: "What is your office number?",
+                message: "What is their office number?",
             },
-            {
-                type: "list",
-                name: "continue",
-                message: "Would you like to add any more members to your team?",
-                choices: ["Yes", "No"],
-            },
+            // {
+            //     type: "list",
+            //     name: "continue",
+            //     message: "Would you like to add any more members to your team?",
+            //     choices: ["Yes", "No"],
+            // },
         ])
         .then(function (response) {
             employee.officeNumber = response.name;
@@ -138,11 +166,27 @@ function promptManager() {
                 employee.officeNumber
             );
             employeeArray.push(manager);
-            if (response.continue === "Yes") {
-                promptUser();
-            } else {
+            counter--;
+            if (counter === 0) {
+                console.log(`All entries complete!`);
                 renderHTML();
+            } else {
+                if (counter === 1) {
+                    console.log(
+                        `Entry complete! ${counter} more entry left to go.`
+                    );
+                } else {
+                    console.log(
+                        `Entry complete! ${counter} more entries left to go.`
+                    );
+                }
+                promptUser();
             }
+            // if (response.continue === "Yes") {
+            //     promptUser();
+            // } else {
+            //     renderHTML();
+            // }
         });
 }
 
@@ -154,11 +198,13 @@ function renderHTML() {
             if (err) {
                 return console.log(err);
             }
-            console.log("File 'team.html' successfully written.");
+            console.log(
+                "File 'team.html' successfully written. It is located in your repository in the 'output' folder"
+            );
         });
     } else {
-        console.log("Directory 'output' not found.");
-        console.log("Creating output folder directory...");
+        console.log("Folder 'output' not found.");
+        console.log("Creating 'output' folder in current repository...");
         const outputDirPath = __dirname + "/output";
         fs.mkdir(outputDirPath, { recursive: false }, (err) => {
             if (err) throw err;
@@ -167,4 +213,4 @@ function renderHTML() {
     }
 }
 
-promptUser();
+promptNumber();
