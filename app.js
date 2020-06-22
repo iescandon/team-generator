@@ -14,18 +14,49 @@ let employee = {};
 const employeeArray = [];
 let counter = 0;
 
-function promptNumber() {
-    console.log("Hello! Welcome to the team generator app!");
+function promptInit() {
+    console.log("Hello! Welcome to the Team Website Generator!");
     inquirer
         .prompt([
             {
                 type: "input",
+                name: "name",
+                message: "Type in the name of the manager:",
+            },
+            {
+                type: "input",
+                name: "id",
+                message: "What is their ID number?",
+            },
+            {
+                type: "input",
+                name: "email",
+                message: "What is their email?",
+            },
+            {
+                type: "input",
+                name: "officeNumber",
+                message: "What is their office number?",
+            },
+            {
+                type: "input",
                 name: "counter",
-                message: "How many members are on your team?",
+                message: "How many members are on this manager's team?",
             },
         ])
         .then(function (response) {
+            console.log(
+                "Manager entry complete! Continue to fill out the members on the team."
+            );
+            employee = response;
             counter = response.counter;
+            const manager = new Manager(
+                employee.name,
+                employee.id,
+                employee.email,
+                employee.officeNumber
+            );
+            employeeArray.push(manager);
             promptUser();
         });
 }
@@ -53,17 +84,15 @@ function promptUser() {
                 type: "list",
                 name: "role",
                 message: "What is their role?",
-                choices: ["Intern", "Engineer", "Manager"],
+                choices: ["Intern", "Engineer"],
             },
         ])
         .then(function (response) {
             employee = response;
             if (response.role === "Intern") {
                 promptIntern();
-            } else if (response.role === "Engineer") {
-                promptEngineer();
             } else {
-                promptManager();
+                promptEngineer();
             }
         });
 }
@@ -73,12 +102,12 @@ function promptIntern() {
         .prompt([
             {
                 type: "input",
-                name: "name",
+                name: "school",
                 message: "What school are they currently attending?",
             },
         ])
         .then(function (response) {
-            employee.school = response.name;
+            employee.school = response.school;
             const intern = new Intern(
                 employee.name,
                 employee.id,
@@ -110,12 +139,12 @@ function promptEngineer() {
         .prompt([
             {
                 type: "input",
-                name: "name",
+                name: "github",
                 message: "What is their GitHub username?",
             },
         ])
         .then(function (response) {
-            employee.github = response.name;
+            employee.github = response.github;
             const engineer = new Engineer(
                 employee.name,
                 employee.id,
@@ -142,53 +171,53 @@ function promptEngineer() {
         });
 }
 
-function promptManager() {
-    inquirer
-        .prompt([
-            {
-                type: "input",
-                name: "name",
-                message: "What is their office number?",
-            },
-            // {
-            //     type: "list",
-            //     name: "continue",
-            //     message: "Would you like to add any more members to your team?",
-            //     choices: ["Yes", "No"],
-            // },
-        ])
-        .then(function (response) {
-            employee.officeNumber = response.name;
-            const manager = new Manager(
-                employee.name,
-                employee.id,
-                employee.email,
-                employee.officeNumber
-            );
-            employeeArray.push(manager);
-            counter--;
-            if (counter === 0) {
-                console.log(`All entries complete!`);
-                renderHTML();
-            } else {
-                if (counter === 1) {
-                    console.log(
-                        `Entry complete! ${counter} more entry left to go.`
-                    );
-                } else {
-                    console.log(
-                        `Entry complete! ${counter} more entries left to go.`
-                    );
-                }
-                promptUser();
-            }
-            // if (response.continue === "Yes") {
-            //     promptUser();
-            // } else {
-            //     renderHTML();
-            // }
-        });
-}
+// function promptManager() {
+//     inquirer
+//         .prompt([
+//             {
+//                 type: "input",
+//                 name: "number",
+//                 message: "What is their office number?",
+//             },
+// {
+//     type: "list",
+//     name: "continue",
+//     message: "Would you like to add any more members to your team?",
+//     choices: ["Yes", "No"],
+// },
+// ])
+// .then(function (response) {
+//     employee.officeNumber = response.number;
+//     const manager = new Manager(
+//         employee.name,
+//         employee.id,
+//         employee.email,
+//         employee.officeNumber
+//     );
+//     employeeArray.push(manager);
+//     counter--;
+//     if (counter === 0) {
+//         console.log(`All entries complete!`);
+//         renderHTML();
+//     } else {
+//         if (counter === 1) {
+//             console.log(
+//                 `Entry complete! ${counter} more entry left to go.`
+//             );
+//         } else {
+//             console.log(
+//                 `Entry complete! ${counter} more entries left to go.`
+//             );
+//         }
+//         promptUser();
+//     }
+// if (response.continue === "Yes") {
+//     promptUser();
+// } else {
+//     renderHTML();
+// }
+//         });
+// }
 
 function renderHTML() {
     const returnedHTML = render(employeeArray);
@@ -213,4 +242,4 @@ function renderHTML() {
     }
 }
 
-promptNumber();
+promptInit();
